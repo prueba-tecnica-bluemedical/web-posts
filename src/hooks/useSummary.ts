@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { fetchPosts } from "../api/posts";
-import type { IPost } from "../types/posts";
+import { fetchPostsSummary } from "../api/posts";
+import type { IPostsCount } from "../types/posts";
 import { errorMessage, isAbortError } from "../utils/errors";
 
-export const usePosts = (name?: string) => {
-  const [data, setData] = useState<IPost[]>([]);
+export const useSummary = (name?: string) => {
+  const [data, setData] = useState<IPostsCount[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -15,8 +15,8 @@ export const usePosts = (name?: string) => {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetchPosts(name, ac.signal);
-        setData(res);
+        const rows = await fetchPostsSummary(name, ac.signal);
+        setData(rows);
       } catch (err: unknown) {
         if (isAbortError(err)) return;
         setError(errorMessage(err));
@@ -30,5 +30,3 @@ export const usePosts = (name?: string) => {
 
   return { data, loading, error };
 };
-
-
