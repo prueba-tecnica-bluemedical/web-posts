@@ -1,69 +1,55 @@
 # React + TypeScript + Vite
+# Web Posts – Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend en **React + Vite + TypeScript + TailwindCSS** que consume el backend de “API Posts”.  
+Muestra el listado de posts y el resumen de conteo por usuario.
 
-Currently, two official plugins are available:
+- Backend esperado:
+  - `GET /api/posts`
+  - `GET /api/posts/summary`
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **React 18**
+- **Vite** (dev server & build)
+- **TypeScript**
+- **TailwindCSS** (con `@tailwindcss/vite`)
+- (Opcional) Headless UI / Heroicons si los usaste para el navbar
+- **Docker** (multi-stage) + **Nginx** para servir estáticos en producción
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## Variables de entorno
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+> **Vite solo expone a la app** variables que comiencen con `VITE_`.
+
+Crea un archivo `.env` (o usa `.env.development`) con:
+
+```env
+# URL base del backend (termina en /api)
+VITE_API_BASE_URL=http://localhost:3000/api
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Levantar en desarrollo (sin docker)
+1) Instalar dependencias
+npm ci
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+2) Copiar .env de ejemplo y ajustar valores
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+3) Levantar en dev npm run dev
+
+## Ejecutar con docker
+
+Asegúrate de tener **Docker** y **Docker Compose** instalados.  
+El proyecto incluye un `Dockerfile` multi-stage y un `docker-compose.yml`.
+
+> **Nota:** El archivo `.env` **no se copia** dentro de la imagen. Se inyecta en tiempo de ejecución con `--env-file` o `env_file`.
+
+---
+
+1) docker compose build --no-cache
+2) docker compose up -d
+
+---

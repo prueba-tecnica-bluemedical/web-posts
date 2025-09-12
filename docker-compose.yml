@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL}
+    image: web-posts:latest
+    container_name: web-posts
+    ports:
+      - "5173:5173"
+    restart: unless-stopped
